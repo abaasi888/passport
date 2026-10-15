@@ -6,8 +6,8 @@ whether the company can hire you in Uganda.
 
 ## Live URLs
 
-- **App:** https://passport-uganda.vercel.app
-- **Repo:** https://github.com/YOUR-USERNAME/passport
+- **App:** https://passport-nine-sand.vercel.app
+- **Repo:**  https://github.com/abaasi888/passport
 
 ## Two modes, one engine
 
