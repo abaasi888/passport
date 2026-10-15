@@ -3,7 +3,7 @@
 **Live product:** https://passport-nine-sand.vercel.app
 **Landing page:** https://passport-landing-kohl.vercel.app
 **Repo:** https://github.com/abaasi888/passport
-**Walkthrough:** [Loom link]
+**Walkthrough:**https://youtu.be/29gi7rK0b7A**
 **Author:** Walusimbi Abaasi · October 2026
 
 ---
