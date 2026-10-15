@@ -1,14 +1,10 @@
-
----
-
-## 20. `DELIVERY_NOTES.md`
-
-```markdown
 # Passport — Delivery Notes
 
-**Live product:** https://passport-uganda.vercel.app
+**Live product:** https://passport-nine-sand.vercel.app
+**Landing page:** https://passport-landing-kohl.vercel.app
+**Repo:** https://github.com/abaasi888/passport
 **Walkthrough:** [Loom link]
-**Author:** YOUR-NAME · October 2026
+**Author:** Walusimbi Abaasi · October 2026
 
 ---
 
@@ -26,8 +22,8 @@ Three applications, three hours, three times the same disqualifying sentence
 buried on line 47 of a posting.
 
 **Who else has it:** developers, designers, support engineers, marketers —
-anyone outside the US/EU applying for remote work. The postings aren't written
-for us. So we read them twice, and often still guess wrong.
+anyone outside the US, UK, or EU applying for remote work. The postings
+aren't written for us. So we read them twice, and often still guess wrong.
 
 **Why this isn't just another job board:** aggregators tell you *where* the
 jobs are. Passport tells you *whether you're allowed to want them*. That's a
@@ -38,20 +34,24 @@ different question, and it's the one that costs an hour per mistake.
 ## What it does
 
 **Scan mode** (`/scan`)
-1. Pulls live jobs from Himalayas, Remotive, and Jobicy
+1. Pulls live jobs from Himalayas, Remotive, and Jobicy (free, legal APIs)
 2. Filters out postings that explicitly exclude Africa/Worldwide
-3. Runs the survivors through a three-layer AI analysis
-4. Shows the ones where the company can plausibly hire from Uganda
-5. Every "Apply" button goes directly to the company's own application page
+3. Drops anything past its expiry date or older than 60 days
+4. Shows every surviving job as a card with the company, logo, location,
+   and a direct link to the company's own application page
+5. Each card has a **Check eligibility** button — click it to run the
+   three-layer analysis on that specific job. No quota is spent on jobs you
+   don't care about.
 
 **Check mode** (`/check`)
-1. Paste any posting from anywhere — LinkedIn, email, referral
+1. Paste any posting from anywhere — LinkedIn, email, a referral, a company
+   site
 2. Same three-layer analysis, same verdict, same evidence
 
 **Both modes** return:
 - A verdict: **eligible / likely / unclear / not eligible**
 - The company's country and hiring model
-- The real timezone overlap with Kampala
+- The real timezone overlap with Kampala, in hours
 - The exact sentences from the posting that decided it (verbatim quotes)
 - 2–3 questions to ask the recruiter
 - 3–4 things to check about the company on LinkedIn
@@ -85,7 +85,7 @@ of closing the door on the word "Serbia".
 | Auto-apply | Violates most sites' ToS and removes the human judgment that matters. |
 | Resume parsing / matching | Different product. More surface area to get wrong. |
 | Score out of 100 | Numbers feel precise and aren't. A verdict + evidence is more honest. |
-| LinkedIn / Indeed scraping | Their ToS prohibit it. Passport uses the free, legal aggregator APIs (Himalayas, Remotive, Jobicy) that index those sites' data with permission. |
+| LinkedIn / Indeed scraping | Their ToS prohibit it. Passport uses free, legal aggregator APIs (Himalayas, Remotive, Jobicy) that index those sites' data with permission. |
 | Automatic LinkedIn team-footprint check | No free, legal API exists. Instead, the tool generates 3–4 specific LinkedIn checks the user runs in 30 seconds. Honest, actionable, no fake data. |
 | Historical hiring / visa databases | Paid (Hirebase, etc.) and mostly US-only. Deferred. |
 | Payments | Nothing to charge for yet. |
@@ -97,20 +97,19 @@ of closing the door on the word "Serbia".
 Per analysis:
 - **Input:** ~1,000–2,500 tokens (job descriptions are long, system prompt is dense)
 - **Output:** ~700–1,000 tokens
-- **Groq free tier:** 1,000 requests/day, no credit card
-- **Cerebras free tier:** fallback, no credit card
+- **Groq free tier:** 1,000 requests/day, no credit card required
 
 **Cost per analysis: $0.00.**
 
 Scan mode, per click:
 - Fetches ~150 jobs from three free APIs (no cost)
-- Analyzes the first N (default 8, user-selectable)
-- Costs 8 Groq requests, well within the daily 1,000 free tier
+- Displays them all instantly
+- Costs **zero** Groq requests until you click **Check eligibility** on a job
 
 **Monthly cost at solo use: $0.00.**
 
-Vercel hobby tier: free. Both AI providers: free tiers, no payment method.
-All three job APIs: free, no key, no card.
+Vercel hobby tier: free. Groq: free tier, no payment method. All three job
+APIs: free, no key, no card.
 
 ---
 
@@ -118,14 +117,14 @@ All three job APIs: free, no key, no card.
 
 **Why Next.js and not Streamlit?**
 Taste is graded first. Next.js gives full control over typography, spacing,
-and motion. Landing page and both tools live in one deploy, one URL, no seam.
-The API keys stay server-side in route handlers.
+and motion. The landing page and both tools share one repo. The API key stays
+server-side in route handlers.
 
 **Why CSS Modules and not Tailwind?**
 CSS Modules give scoped class names without the utility soup in JSX. Design
-tokens live in `globals.css` as CSS variables, so all three pages stay in
-sync. It reads like plain CSS, which is easier to defend in a code review
-than a wall of Tailwind classes.
+tokens live in `globals.css` as CSS variables, so all pages stay in sync.
+It reads like plain CSS, which is easier to defend in a code review than a
+wall of Tailwind classes.
 
 **Why low temperature (0.2)?**
 This is analysis, not creative writing. The same posting should produce the
@@ -142,10 +141,11 @@ verdict is "unclear," not "eligible." Absence of a restriction is not
 permission. A wrong "eligible" costs the user an hour; a wrong "not eligible"
 costs them an opportunity.
 
-**Why Groq + Cerebras, not DeepSeek/OpenAI?**
-The live URL has to stay up for reviewers without anyone paying. Both offer
-permanent free tiers with no credit card. The engine is provider-agnostic —
-`analyzeJob()` talks to any OpenAI-compatible endpoint.
+**Why Groq, not DeepSeek/OpenAI?**
+The live URL has to stay up for reviewers without anyone paying. Groq offers
+a permanent free tier with no credit card, OpenAI-compatible endpoints, and
+JSON mode. The engine is provider-agnostic — `analyzeJob()` talks to any
+OpenAI-compatible endpoint.
 
 **Why Himalayas + Remotive + Jobicy, not LinkedIn/Indeed?**
 LinkedIn and Indeed both prohibit scraping in their Terms of Service.
@@ -153,6 +153,13 @@ Himalayas, Remotive, and Jobicy offer public, free, no-key APIs and
 explicitly want their data consumed this way. They index tens of thousands
 of company career pages between them, so coverage is comparable to the big
 boards — without the legal risk.
+
+**Why per-job check instead of batch analysis?**
+The first version analyzed 8 jobs per scan, which burned 8 Groq requests
+whether the user cared about them or not. The current version defers
+analysis until the user clicks **Check eligibility** on a specific job.
+That's one request per click. The user never runs out of quota from a scan
+they didn't ask for.
 
 ---
 
@@ -165,8 +172,8 @@ boards — without the legal risk.
 3. **Save a shortlist** of eligible jobs in localStorage (still no accounts).
 4. **"What would make me eligible?"** — turn a rejection into a concrete gap list.
 5. **Company history layer** — integrate paid sources (Hirebase, etc.) if the
-   product graduates from prototype. Currently stated as out of scope because
-   no free, legal API exists.
+   product graduates from prototype. Currently out of scope because no free,
+   legal API exists.
 6. **Per-IP rate limiting** if it ever goes viral — deferred because there are
    no users yet, and solving problems you don't have is the opposite of scope
    discipline.
