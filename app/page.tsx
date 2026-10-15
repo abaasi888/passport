@@ -5,9 +5,9 @@ export default function Home() {
   return (
     <main className={styles.page}>
       <nav className={styles.nav}>
-        <div className={styles.logo}>
-          Pass<span className={styles.logoAccent}>port</span>
-        </div>
+        <Link href="/" className={styles.brand}>
+          Pass<span className={styles.brandAccent}>port</span>
+        </Link>
       </nav>
 
       <header className={styles.header}>

@@ -79,8 +79,8 @@ export default function CheckPage() {
   return (
     <main className={styles.page}>
       <nav className={styles.nav}>
-        <Link href="/" className={styles.logo}>
-          Pass<span className={styles.logoAccent}>port</span>
+        <Link href="/" className={styles.brand}>
+          Pass<span className={styles.brandAccent}>port</span>
         </Link>
         <Link href="/" className={styles.back}>
           ← Back
