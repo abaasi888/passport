@@ -2,7 +2,6 @@
  * engine.ts — country-agnostic eligibility analysis for Passport.
  *
  * Primary:   Groq (free tier, no credit card)
- * Fallback:  Cerebras (free tier, no credit card)
  *
  * One exported function: analyzeJob(jdText, profile) -> AnalysisResult
  * Every claim in the output must quote the posting.
@@ -257,33 +256,6 @@ async function callGroq(prompt: string): Promise<string> {
   return data.choices[0].message.content;
 }
 
-async function callCerebras(prompt: string): Promise<string> {
-  const key = process.env.CEREBRAS_API_KEY;
-  if (!key) throw new Error("CEREBRAS_API_KEY not set.");
-
-  const res = await fetch("https://api.cerebras.ai/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${key}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model: "gpt-oss-120b",
-      messages: [
-        { role: "system", content: SYSTEM_PROMPT },
-        { role: "user", content: prompt },
-      ],
-      response_format: { type: "json_object" },
-      temperature: 0.2,
-    }),
-  });
-
-  if (!res.ok) {
-    throw new Error(`Cerebras ${res.status}: ${await res.text()}`);
-  }
-  const data = await res.json();
-  return data.choices[0].message.content;
-}
 
 export async function analyzeJob(
   jdText: string,
@@ -295,10 +267,8 @@ export async function analyzeJob(
 
   const prompt = buildUserPrompt(jdText, profile);
   const providers: Array<[string, (p: string) => Promise<string>]> = [
-    ["Groq", callGroq],
-    ["Cerebras", callCerebras],
-  ];
-
+  ["Groq", callGroq],
+ ];
   const errors: string[] = [];
 
   for (const [name, fn] of providers) {
