@@ -43,6 +43,74 @@
   max-width: 640px;
 }
 
+.profileWrap {
+  margin-bottom: 18px;
+}
+
+.profileToggle {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 0.9rem;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: transparent;
+  transition: color 0.15s ease, text-decoration-color 0.15s ease;
+}
+
+.profileToggle:hover,
+.profileToggle:focus-visible {
+  color: var(--text);
+  text-decoration-color: var(--accent);
+}
+
+.profile {
+  margin-top: 16px;
+  padding: 20px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.profileField {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.profileLabel {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-dim);
+}
+
+.profileInput {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  padding: 10px 12px;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.profileInput:focus {
+  border-color: var(--accent);
+}
+
+.profileNote {
+  font-size: 0.78rem;
+  color: var(--muted-dim);
+}
+
 .controls {
   display: flex;
   flex-wrap: wrap;
