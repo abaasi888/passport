@@ -36,11 +36,12 @@ export default function ScanPage() {
   const [total, setTotal] = useState<number | null>(null);
   const [scanning, setScanning] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [profile] = useState<Profile>({
+  const [profile, setProfile] = useState<Profile>({
     location: "Kampala, Uganda",
     work_auth: "Ugandan citizen — no work authorization outside Uganda",
     timezone: "EAT (UTC+3)",
   });
+  const [showProfile, setShowProfile] = useState(false);
 
   async function scan() {
     setScanning(true);
@@ -121,6 +122,49 @@ export default function ScanPage() {
          Every listing links straight to the company&apos;s own application page.
 </p>
       </header>
+
+      <section className={styles.profileWrap} aria-label="Candidate profile">
+        <button
+          type="button"
+          className={styles.profileToggle}
+          aria-expanded={showProfile}
+          onClick={() => setShowProfile((visible) => !visible)}
+        >
+          {showProfile ? "Hide" : "Edit"} your profile
+        </button>
+        {showProfile && (
+          <div className={styles.profile}>
+            {(
+              [
+                ["location", "Where are you based?"],
+                ["work_auth", "Work authorization"],
+                ["timezone", "Timezone"],
+              ] as const
+            ).map(([key, label]) => (
+              <div key={key} className={styles.profileField}>
+                <label htmlFor={`scan-profile-${key}`} className={styles.profileLabel}>
+                  {label}
+                </label>
+                <input
+                  id={`scan-profile-${key}`}
+                  type="text"
+                  value={profile[key]}
+                  onChange={(event) =>
+                    setProfile((current) => ({
+                      ...current,
+                      [key]: event.target.value,
+                    }))
+                  }
+                  className={styles.profileInput}
+                />
+              </div>
+            ))}
+            <p className={styles.profileNote}>
+              Used when you check a job in this scan. Your profile isn&apos;t saved.
+            </p>
+          </div>
+        )}
+      </section>
 
       <button onClick={scan} disabled={scanning} className={styles.primaryBtn}>
         {scanning ? "Scanning the world…" : "Scan jobs"}
